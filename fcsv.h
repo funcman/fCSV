@@ -23,5 +23,6 @@ void            fcsv_delete_field(struct fRow* row, unsigned int index);
 
 unsigned int    fcsv_rows_count(struct fCSV* csv);
 unsigned int    fcsv_fields_count(struct fRow* row);
+void            fcsv_set_fields_count(struct fRow* row, unsigned int count);
 
 #endif//FCSV_H

@@ -265,3 +265,7 @@ unsigned int fcsv_rows_count(struct fCSV* csv) {
 unsigned int fcsv_fields_count(struct fRow* row) {
     return row->fields.size();
 }
+
+void fcsv_set_fields_count(struct fRow* row, unsigned int count) {
+    row->fields.resize(count);
+}
