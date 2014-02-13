@@ -18,11 +18,13 @@ int main() {
 	struct fRow* row = 0;
 
 	row = fcsv_first_row(csv);
+	fcsv_set_fields_count(row, 3);
 	fcsv_set_field(row, 0, "00");
 	fcsv_set_field(row, 1, "01");
 	fcsv_set_field(row, 2, "02");
 
 	row = fcsv_insert_row(row);
+	fcsv_set_fields_count(row, 3);
 	fcsv_set_field(row, 0, "10");
 	fcsv_set_field(row, 1, "11");
 	fcsv_set_field(row, 2, "12");
