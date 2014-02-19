@@ -1,0 +1,3 @@
+[submodule "fStr"]
+	path = fStr
+	url = https://github.com/funcman/fStr.git
