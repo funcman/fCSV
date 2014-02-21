@@ -8,6 +8,7 @@ struct fRow;
 
 struct fCSV*    fcsv_create();
 struct fCSV*    fcsv_open(char const* filename);
+struct fCSV*    fcsv_read(char* data, unsigned int size);
 void            fcsv_close(struct fCSV* csv);
 void            fcsv_save(struct fCSV* csv, char const* filename);
 

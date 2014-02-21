@@ -13,7 +13,7 @@ struct fRow {
 };
 
 struct fCSV {
-    int count;
+    unsigned int count;
     struct fRow* first;
     fCSV() : count(0), first(0) {}
 };
@@ -68,13 +68,13 @@ static int std_string_replace_(std::string& base, std::string src, std::string d
     std::string::size_type pos = base.find(src, 0);
     std::string::size_type src_len = src.size();
     std::string::size_type des_len = des.size();
-    int resulte = 0;
+    int result = 0;
     while ((pos != std::string::npos)) {
         base.replace(pos, src_len, des);
-        ++resulte;
+        ++result;
         pos = base.find(src, (pos+des_len));
     }
-    return resulte;
+    return result;
 }
 
 static std::string get_a_escaped_field_(char* str, unsigned int len, char** last_str) {
@@ -138,8 +138,7 @@ struct fCSV* fcsv_create() {
 }
 
 struct fCSV* fcsv_open(char const* filename) {
-    struct fCSV* csv = new struct fCSV;
-    struct fRow* row = fcsv_first_row(csv);
+    struct fCSV* csv = 0;
     FILE* fp;
     fp = fopen(filename, "rb");
     if( fp ) {
@@ -150,23 +149,30 @@ struct fCSV* fcsv_open(char const* filename) {
         csv_str = new char[size];
         fseek(fp, 0, SEEK_SET);
         fread(csv_str, size, 1, fp);
-        char* s1 = csv_str;
-        char* s2 = s1;
-        unsigned int len = size;
-        old_sc = SC_EOF;
-        cur_sc = SC_EOF;
-        do {
-            row->fields.push_back(get_a_field_(s1, len, &s2));
-            if( new_row_ ) {
-                row = fcsv_insert_row(row);
-                new_row_ = false;
-            }
-            len -= (s2-s1);
-            s1=s2;
-        }while ( cur_sc != SC_EOF );
+        csv = fcsv_read(csv_str, size);
         delete[] csv_str;
         fclose(fp);
     }
+    return csv;
+}
+
+struct fCSV* fcsv_read(char* data, unsigned int size) {
+    struct fCSV* csv = new struct fCSV;
+    struct fRow* row = fcsv_first_row(csv);
+    char* s1 = data;
+    char* s2 = s1;
+    unsigned int len = size;
+    old_sc = SC_EOF;
+    cur_sc = SC_EOF;
+    do {
+        row->fields.push_back(get_a_field_(s1, len, &s2));
+        if( new_row_ ) {
+            row = fcsv_insert_row(row);
+            new_row_ = false;
+        }
+        len -= (s2-s1);
+        s1=s2;
+    }while ( cur_sc != SC_EOF );
     return csv;
 }
 
@@ -180,11 +186,11 @@ void fcsv_save(struct fCSV* csv, char const* filename) {
     FILE* fp;
     fp = fopen(filename, "wb");
     if ( fp ) {
-        struct fRow* row = csv->first;
+        struct fRow* row = fcsv_first_row(csv);
         while ( row ) {
             for ( unsigned int i=0; i<row->fields.size(); ++i ) {
                 std::string field = writable_string_(row->fields[i]);
-                fwrite(field.c_str(), field.length(), 1, fp);
+                fwrite(field.data(), field.length(), 1, fp);
                 if ( i+1<row->fields.size() ) fwrite(",", 1, 1, fp);
             }
             row = fcsv_next_row(row);
