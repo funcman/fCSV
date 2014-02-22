@@ -2,6 +2,7 @@
 #define FCSV_H
 
 #include <string>
+#include "fstr.h"
 
 struct fCSV;
 struct fRow;
@@ -11,6 +12,7 @@ struct fCSV*    fcsv_open(char const* filename);
 struct fCSV*    fcsv_read(char* data, unsigned int size);
 void            fcsv_close(struct fCSV* csv);
 void            fcsv_save(struct fCSV* csv, char const* filename);
+struct fStr*    fcsv_to_str(struct fCSV* csv, struct fStr* str);
 
 struct fRow*    fcsv_first_row(struct fCSV* csv);
 struct fRow*    fcsv_next_row(struct fRow* row);

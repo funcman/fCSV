@@ -1,4 +1,5 @@
-CXXFLAGS?=-Os -Wall
+CFLAGS?=-O2 -Wall
+CXXFLAGS?=-O2 -Wall -Wno-write-strings
 
 all: libfcsv.a
 
@@ -6,10 +7,10 @@ libfcsv.a: fcsv.o fstr.o
 	$(AR) -r libfcsv.a fcsv.o fstr.o
 
 fcsv.o: fcsv.cpp fcsv.h
-	$(CXX) $(CXXFLAGS) -c fcsv.cpp
+	$(CXX) $(CXXFLAGS) -c fcsv.cpp -IfStr
 
 fstr.o: fStr/fstr.c fStr/fstr.h
-	$(CC) $(CXXFLAGS) -c fStr/fstr.c
+	$(CC) $(CFLAGS) -c fStr/fstr.c
 
 fStr/fstr.c:
 	git submodule update --init

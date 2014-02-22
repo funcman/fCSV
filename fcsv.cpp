@@ -200,6 +200,20 @@ void fcsv_save(struct fCSV* csv, char const* filename) {
     }
 }
 
+struct fStr* fcsv_to_str(struct fCSV* csv, struct fStr* str) {
+    struct fRow* row = fcsv_first_row(csv);
+    while ( row ) {
+        for ( unsigned int i=0; i<row->fields.size(); ++i ) {
+            std::string field = writable_string_(row->fields[i]);
+            str = fstr_append(str, (char*)field.data(), field.length());
+            if ( i+1<row->fields.size() ) str = fstr_append(str, ",", 1);
+        }
+        row = fcsv_next_row(row);
+        if ( row ) str = fstr_append(str, "\r\n", 2);
+    }
+    return str;
+}
+
 struct fRow* fcsv_first_row(struct fCSV* csv) {
     if ( !csv->first ) {
         csv->first = new struct fRow;
