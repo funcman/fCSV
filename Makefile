@@ -6,7 +6,7 @@ all: libfcsv.a
 libfcsv.a: fcsv.o fstr.o
 	$(AR) -r libfcsv.a fcsv.o fstr.o
 
-fcsv.o: fcsv.cpp fcsv.h
+fcsv.o: fcsv.cpp fcsv.h fStr/fstr.h
 	$(CXX) $(CXXFLAGS) -c fcsv.cpp -IfStr
 
 fstr.o: fStr/fstr.c fStr/fstr.h

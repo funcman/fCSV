@@ -30,7 +30,7 @@ enum SEPARATING_CHARACTER {
 static enum SEPARATING_CHARACTER old_sc = SC_EOF;
 static enum SEPARATING_CHARACTER cur_sc = SC_EOF;
 
-static enum SEPARATING_CHARACTER get_sepchar_(char* str, unsigned int len, int* pos, int* last_pos) {
+static enum SEPARATING_CHARACTER get_sepchar_(char const* str, unsigned int len, int* pos, int* last_pos) {
     for ( unsigned int i=0; i<len; ++i ) {
         if ( str[i] == ',' ) {
             *pos = i;
@@ -51,7 +51,7 @@ static enum SEPARATING_CHARACTER get_sepchar_(char* str, unsigned int len, int* 
     return SC_EOF;
 }
 
-static int get_comma_pos_(char* str, unsigned int len) {
+static int get_comma_pos_(char const* str, unsigned int len) {
     for ( unsigned int i=0; i<len; ++i ) {
         if ( str[i] == '\"' ) {
             if( i+1<len && str[i+1]=='\"' ) {
@@ -77,7 +77,7 @@ static int std_string_replace_(std::string& base, std::string src, std::string d
     return result;
 }
 
-static std::string get_a_escaped_field_(char* str, unsigned int len, char** last_str) {
+static std::string get_a_escaped_field_(char const* str, unsigned int len, char const** last_str) {
     std::string s;
     int p = get_comma_pos_(str, len);
     if( p < 0 ) {
@@ -98,7 +98,7 @@ static std::string get_a_escaped_field_(char* str, unsigned int len, char** last
     return s;
 }
 
-static std::string get_a_non_escaped_field_(char* str, unsigned int len, char** last_str) {
+static std::string get_a_non_escaped_field_(char const* str, unsigned int len, char const** last_str) {
     int pos;
     int last_pos;
     std::string s;
@@ -113,7 +113,7 @@ static std::string get_a_non_escaped_field_(char* str, unsigned int len, char** 
     return s;
 }
 
-static std::string get_a_field_(char* str, unsigned int len, char** last_str) {
+static std::string get_a_field_(char const* str, unsigned int len, char const** last_str) {
     if( len >= 1 && str[0] == '\"' ) {
         return get_a_escaped_field_(str+1, len-1, last_str);
     }else {
@@ -156,11 +156,11 @@ struct fCSV* fcsv_open(char const* filename) {
     return csv;
 }
 
-struct fCSV* fcsv_read(char* data, unsigned int size) {
+struct fCSV* fcsv_read(char const* data, unsigned int size) {
     struct fCSV* csv = new struct fCSV;
     struct fRow* row = fcsv_first_row(csv);
-    char* s1 = data;
-    char* s2 = s1;
+    char const* s1 = data;
+    char const* s2 = s1;
     unsigned int len = size;
     old_sc = SC_EOF;
     cur_sc = SC_EOF;
